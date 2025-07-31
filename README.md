@@ -17,6 +17,6 @@
 4. Перейти в каталог с исполняемым файлом и запустить его
 
 ```
-cd IdentTestTask3\bin\Release\net9.0\
+cd IdentTestTask3\bin\Release\
 IdentTestTask3.exe
 ```
