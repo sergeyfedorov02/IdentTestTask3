@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -15,6 +16,21 @@ namespace IdentTestTask3
                                type != typeof(Control) &&   // отфильтровываем (исключаем сам Control)
                                !type.IsAbstract &&          // только те, которые можем создать
                                !type.IsNested &&            // не вложенные (они вспомогательные)
+                               !type.GetCustomAttributesData().Any(a =>
+                               {
+                                   // контрол должен быть запрещен к использованию на панели инструментов, чтобы его не мог использовать разработчик
+                                   if (a.AttributeType == typeof(ToolboxItemAttribute))
+                                   {
+                                       if (a.ConstructorArguments.Count == 1)
+                                       {
+                                           if (a.ConstructorArguments.First().Value is false)
+                                           {
+                                               return true;
+                                           }
+                                       }
+                                   }
+                                   return false;
+                               }) &&
                                type.Namespace == "System.Windows.Forms");  // только те, что лежат в указанном пространстве
         }
 
